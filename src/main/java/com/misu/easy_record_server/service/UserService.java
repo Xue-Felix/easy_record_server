@@ -26,5 +26,4 @@ public interface UserService {
 
     // 根据条件查询用户（示例以用户名模糊查询为例，可根据实际需求扩展更多条件）
     List<User> findUsersByUsernameLike(String username);
-
 }

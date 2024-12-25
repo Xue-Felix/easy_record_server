@@ -1,4 +1,5 @@
 package com.misu.easy_record_server.vo;
+
 import java.time.LocalDateTime;
 
 /**
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 public class UserVO {
     private Integer id;
     private String username;
+    private Integer hotelId;
     private Integer accountLevel;
     private LocalDateTime createTime;
     private LocalDateTime lastLoginTime;
@@ -31,6 +33,14 @@ public class UserVO {
 
     public Integer getAccountLevel() {
         return accountLevel;
+    }
+
+    public Integer getHotelId() {
+        return hotelId;
+    }
+
+    public void setHotelId(Integer hotelId) {
+        this.hotelId = hotelId;
     }
 
     public void setAccountLevel(Integer accountLevel) {
