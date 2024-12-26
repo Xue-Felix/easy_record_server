@@ -1,0 +1,6 @@
+psb:
+  hotel:
+    api:
+      base-url: http://58.210.180.134:8891/HotelSer
+      connect-timeout: 5000
+      read-timeout: 5000
