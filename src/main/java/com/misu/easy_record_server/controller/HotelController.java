@@ -37,7 +37,6 @@ public class HotelController {
         return ResponseResult.success(hotelViewOs);
     }
 
-
     // 创建酒店的接口
     @PostMapping
     public ResponseResult<HotelVO> createHotel(@Validated @RequestBody Hotel hotel) {
