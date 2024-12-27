@@ -5,6 +5,9 @@ import com.misu.easy_record_server.common.ResponseStatus;
 import com.misu.easy_record_server.pojo.User;
 import com.misu.easy_record_server.service.UserService;
 import com.misu.easy_record_server.vo.UserVO;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +26,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/users")
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -42,7 +46,6 @@ public class UserController {
         return ResponseResult.success(userViewOs);
     }
 
-
     // 用户注册接口
     @PostMapping("/register")
     public ResponseEntity<ResponseResult<User>> register(@RequestBody User user) {
@@ -50,7 +53,8 @@ public class UserController {
             User registeredUser = userService.registerUser(user);
             return ResponseEntity.ok(ResponseResult.success(registeredUser));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseResult.fail(ResponseStatus.FAILURE, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ResponseResult.fail(ResponseStatus.FAILURE, e.getMessage()));
         }
     }
 
@@ -59,9 +63,12 @@ public class UserController {
     public ResponseEntity<ResponseResult<User>> login(@RequestParam String username, @RequestParam String password) {
         try {
             Optional<User> loggedInUser = userService.loginUser(username, password);
-            return loggedInUser.map(user -> ResponseEntity.ok(ResponseResult.success(user))).orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseResult.fail(ResponseStatus.UNAUTHORIZED, "用户名或密码错误")));
+            return loggedInUser.map(user -> ResponseEntity.ok(ResponseResult.success(user)))
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                            .body(ResponseResult.fail(ResponseStatus.UNAUTHORIZED, "用户名或密码错误")));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseResult.fail(ResponseStatus.FAILURE, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ResponseResult.fail(ResponseStatus.FAILURE, e.getMessage()));
         }
     }
 
@@ -77,6 +84,8 @@ public class UserController {
     // 根据用户ID获取用户信息的接口
     @GetMapping("/{id}")
     public ResponseResult<UserVO> getUserById(@PathVariable Integer id) {
+        log.info("获取用户信息 id: {}", id);
+
         User user = userService.getUserById(id);
         if (user == null) {
             return ResponseResult.fail(ResponseStatus.NOT_FOUND, "用户不存在");

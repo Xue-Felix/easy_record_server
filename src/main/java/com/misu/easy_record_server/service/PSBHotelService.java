@@ -1,7 +1,7 @@
 package com.misu.easy_record_server.service;
 
-import com.misu.easy_record_server.pojo.Hotel;
-import com.misu.easy_record_server.pojo.Room;
+import com.misu.easy_record_server.pojo.PSBHotel;
+import com.misu.easy_record_server.pojo.PSBRoom;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public interface PSBHotelService {
      * @param psbId 旅馆代码
      * @return Room对象列表
      */
-    List<Room> getRoomList(String psbId);
+    List<PSBRoom> getRoomList(String psbId);
 
     /**
      * 获取客人是否在住信息
@@ -51,7 +51,7 @@ public interface PSBHotelService {
      * @param psbId 旅馆代码
      * @return Hotel对象，如果未匹配到返回null
      */
-    Hotel getHotelInfo(String psbId);
+    PSBHotel getHotelInfo(String psbId);
 
     /**
      * 退房查询
