@@ -6,27 +6,27 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "tb_room")
-public class Room {
+@Table(name = "tb_room_type")
+public class RoomType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false, length = 50)
+    private String typeName; // 房型名称
+
     @Column(nullable = false)
     private Integer hotelId; // 所属酒店ID
 
-    @Column(nullable = false, length = 20)
-    private String roomNo; // 房间号
+    private String description; // 房型描述
 
-    @Column(nullable = false)
-    private Integer roomTypeId; // 房间类型ID
+    private Integer maxGuests; // 最大容纳人数
 
-    @Column(nullable = false)
-    private Integer status; // 状态 0:空闲 1:已住 2:打扫 3:维修
+    private Double basePrice; // 基础价格
 
-    private String floor; // 楼层
+    private Double hourPrice; // 钟点房价格
 
-    private String remark; // 备注
+    private Integer status; // 状态 1:启用 0:停用
 
     private LocalDateTime createTime;
 
