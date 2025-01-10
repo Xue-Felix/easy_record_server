@@ -25,7 +25,7 @@ import java.util.Optional;
  * @author x
  */
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 @Slf4j
 public class UserController {
 
