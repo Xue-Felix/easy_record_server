@@ -62,7 +62,11 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<ResponseResult<User>> login(@RequestParam String username, @RequestParam String password) {
         try {
+            log.info("username: {}", username);
+            log.info("password: {}", password);
+
             Optional<User> loggedInUser = userService.loginUser(username, password);
+
             return loggedInUser.map(user -> ResponseEntity.ok(ResponseResult.success(user)))
                     .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                             .body(ResponseResult.fail(ResponseStatus.UNAUTHORIZED, "用户名或密码错误")));

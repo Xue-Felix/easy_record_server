@@ -3,7 +3,10 @@ package com.misu.easy_record_server.service;
 import com.misu.easy_record_server.mapper.UserMapper;
 import com.misu.easy_record_server.pojo.User;
 import com.misu.easy_record_server.repository.UserRepository;
-import com.misu.easy_record_server.utils.EncryptUtil;
+
+import cn.hutool.crypto.SecureUtil;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +18,7 @@ import java.util.Optional;
  * @author x
  */
 @Service
+@Slf4j
 public class UserServiceImplementation implements UserService {
 
     final UserMapper userMapper;
@@ -28,9 +32,6 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public User saveUser(User user) {
-        // 使用BCryptPasswordEncoder对用户输入的密码进行加密
-        String encodedPassword = EncryptUtil.encryptPassword(user.getPassword());
-        user.setPassword(encodedPassword);
         return userMapper.save(user);
     }
 
@@ -78,7 +79,7 @@ public class UserServiceImplementation implements UserService {
         }
 
         // 对用户输入的密码进行加密
-        String encodedPassword = EncryptUtil.encryptPassword(user.getPassword());
+        String encodedPassword = SecureUtil.md5(user.getPassword());
 
         user.setPassword(encodedPassword);
 
@@ -95,11 +96,12 @@ public class UserServiceImplementation implements UserService {
     public Optional<User> loginUser(String username, String password) throws Exception {
         // 根据用户名从数据库获取用户信息
         User user = userRepository.findByUsername(username);
+
         if (user == null) {
             return Optional.empty();
         }
 
-        if (EncryptUtil.encryptPassword(user.getPassword()).equals(EncryptUtil.encryptPassword(password))) {
+        if (user.getPassword().equals(SecureUtil.md5(password))) {
             return Optional.of(user);
         }
 
