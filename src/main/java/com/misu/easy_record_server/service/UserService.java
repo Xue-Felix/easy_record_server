@@ -1,25 +1,30 @@
 package com.misu.easy_record_server.service;
 
 import com.misu.easy_record_server.pojo.User;
+import com.misu.easy_record_server.vo.UserVO;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author x
  */
 public interface UserService {
     User saveUser(User user);
+
     User getUserById(Integer id);
+
     List<User> getAllUsers();
+
     User updateUser(User user);
+
     void deleteUser(Integer id);
 
     User registerUser(User user) throws Exception;
 
-    Optional<User> loginUser(String username, String password) throws Exception;
+    UserVO loginUser(String username, String password) throws Exception;
 
     // 分页查询用户
     Page<User> findAllUsersPageable(Pageable pageable);

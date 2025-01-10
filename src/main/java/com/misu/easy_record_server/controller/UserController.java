@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author x
@@ -60,16 +59,14 @@ public class UserController {
 
     // 用户登录接口
     @PostMapping("/login")
-    public ResponseEntity<ResponseResult<User>> login(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<ResponseResult<UserVO>> login(@RequestParam String username, @RequestParam String password) {
         try {
             log.info("username: {}", username);
             log.info("password: {}", password);
 
-            Optional<User> loggedInUser = userService.loginUser(username, password);
+            UserVO loggedInUser = userService.loginUser(username, password);
 
-            return loggedInUser.map(user -> ResponseEntity.ok(ResponseResult.success(user)))
-                    .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                            .body(ResponseResult.fail(ResponseStatus.UNAUTHORIZED, "用户名或密码错误")));
+            return ResponseEntity.ok(ResponseResult.success(loggedInUser));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ResponseResult.fail(ResponseStatus.FAILURE, e.getMessage()));

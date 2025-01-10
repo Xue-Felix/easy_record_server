@@ -3,16 +3,17 @@ package com.misu.easy_record_server.service;
 import com.misu.easy_record_server.mapper.UserMapper;
 import com.misu.easy_record_server.pojo.User;
 import com.misu.easy_record_server.repository.UserRepository;
+import com.misu.easy_record_server.vo.UserVO;
 
 import cn.hutool.crypto.SecureUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author x
@@ -93,18 +94,20 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public Optional<User> loginUser(String username, String password) throws Exception {
+    public UserVO loginUser(String username, String password) throws Exception {
         // 根据用户名从数据库获取用户信息
         User user = userRepository.findByUsername(username);
 
         if (user == null) {
-            return Optional.empty();
+            throw new Exception("用户不存在");
         }
 
         if (user.getPassword().equals(SecureUtil.md5(password))) {
-            return Optional.of(user);
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(user, userVO);
+            return userVO;
         }
 
-        return Optional.empty();
+        throw new Exception("用户名或密码错误");
     }
 }
