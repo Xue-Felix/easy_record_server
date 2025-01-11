@@ -4,6 +4,7 @@ import com.misu.easy_record_server.common.ResponseResult;
 import com.misu.easy_record_server.common.ResponseStatus;
 import com.misu.easy_record_server.pojo.User;
 import com.misu.easy_record_server.service.UserService;
+import com.misu.easy_record_server.utils.JwtUtil;
 import com.misu.easy_record_server.vo.UserVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * @author x
@@ -29,9 +34,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     private ResponseResult<List<UserVO>> getListResponseResult(List<User> users) {
@@ -59,14 +66,18 @@ public class UserController {
 
     // 用户登录接口
     @PostMapping("/login")
-    public ResponseEntity<ResponseResult<UserVO>> login(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<ResponseResult<Map<String, Object>>> login(
+            @RequestParam String username,
+            @RequestParam String password) {
         try {
-            log.info("username: {}", username);
-            log.info("password: {}", password);
-
             UserVO loggedInUser = userService.loginUser(username, password);
+            String token = jwtUtil.generateToken(loggedInUser.getId(), loggedInUser.getUsername());
 
-            return ResponseEntity.ok(ResponseResult.success(loggedInUser));
+            Map<String, Object> response = new HashMap<>();
+            response.put("user", loggedInUser);
+            response.put("token", token);
+
+            return ResponseEntity.ok(ResponseResult.success(response));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ResponseResult.fail(ResponseStatus.FAILURE, e.getMessage()));
@@ -145,5 +156,19 @@ public class UserController {
             @RequestParam String username) {
         List<User> users = userService.findUsersByUsernameLike("%" + username + "%");
         return getListResponseResult(users);
+    }
+
+    // 新增获取用户信息接口
+    @GetMapping("/info")
+    public ResponseResult<UserVO> getUserInfo(HttpServletRequest request) {
+        String token = request.getHeader("Authorization").substring(7);
+        Claims claims = jwtUtil.validateToken(token);
+        Integer userId = Integer.valueOf(claims.getSubject());
+
+        User user = userService.getUserById(userId);
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+
+        return ResponseResult.success(userVO);
     }
 }
