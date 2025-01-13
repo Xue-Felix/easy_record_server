@@ -65,22 +65,40 @@ public class UserController {
     }
 
     // 用户登录接口
+    // @PostMapping("/login")
+    // public ResponseEntity<ResponseResult<Map<String, Object>>> login(
+    // @RequestParam String username,
+    // @RequestParam String password) {
+    // try {
+    // UserVO loggedInUser = userService.loginUser(username, password);
+    // String token = jwtUtil.generateToken(loggedInUser.getId(),
+    // loggedInUser.getUsername());
+
+    // Map<String, Object> response = new HashMap<>();
+    // response.put("token", token);
+
+    // return ResponseEntity.ok(ResponseResult.success(response));
+    // } catch (Exception e) {
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    // .body(ResponseResult.fail(ResponseStatus.FAILURE, e.getMessage()));
+    // }
+    // }
+
     @PostMapping("/login")
-    public ResponseEntity<ResponseResult<Map<String, Object>>> login(
-            @RequestParam String username,
-            @RequestParam String password) {
+    public ResponseResult<Map<String, Object>> login(@RequestBody Map<String, String> loginRequest) {
         try {
-            UserVO loggedInUser = userService.loginUser(username, password);
-            String token = jwtUtil.generateToken(loggedInUser.getId(), loggedInUser.getUsername());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("user", loggedInUser);
-            response.put("token", token);
-
-            return ResponseEntity.ok(ResponseResult.success(response));
+            String username = loginRequest.get("username");
+            String password = loginRequest.get("password");
+            UserVO user = userService.loginUser(username, password);
+            if (user != null) {
+                String token = jwtUtil.generateToken(user.getId(), user.getUsername());
+                Map<String, Object> result = new HashMap<>();
+                result.put("token", token);
+                return ResponseResult.success(result);
+            }
+            return ResponseResult.fail(ResponseStatus.INTERNAL_SERVER_ERROR, "用户名或密码错误");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ResponseResult.fail(ResponseStatus.FAILURE, e.getMessage()));
+            return ResponseResult.fail(ResponseStatus.FAILURE, e.getMessage());
         }
     }
 
