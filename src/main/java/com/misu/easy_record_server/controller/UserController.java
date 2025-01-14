@@ -64,26 +64,6 @@ public class UserController {
         }
     }
 
-    // 用户登录接口
-    // @PostMapping("/login")
-    // public ResponseEntity<ResponseResult<Map<String, Object>>> login(
-    // @RequestParam String username,
-    // @RequestParam String password) {
-    // try {
-    // UserVO loggedInUser = userService.loginUser(username, password);
-    // String token = jwtUtil.generateToken(loggedInUser.getId(),
-    // loggedInUser.getUsername());
-
-    // Map<String, Object> response = new HashMap<>();
-    // response.put("token", token);
-
-    // return ResponseEntity.ok(ResponseResult.success(response));
-    // } catch (Exception e) {
-    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-    // .body(ResponseResult.fail(ResponseStatus.FAILURE, e.getMessage()));
-    // }
-    // }
-
     @PostMapping("/login")
     public ResponseResult<Map<String, Object>> login(@RequestBody Map<String, String> loginRequest) {
         try {
@@ -180,13 +160,23 @@ public class UserController {
     @GetMapping("/info")
     public ResponseResult<UserVO> getUserInfo(HttpServletRequest request) {
         String token = request.getHeader("Authorization").substring(7);
-        Claims claims = jwtUtil.validateToken(token);
-        Integer userId = Integer.valueOf(claims.getSubject());
 
-        User user = userService.getUserById(userId);
-        UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(user, userVO);
+        if (token == null) {
+            return ResponseResult.fail(ResponseStatus.INTERNAL_SERVER_ERROR, "token 为空");
+        }
 
-        return ResponseResult.success(userVO);
+        try {
+
+            Claims claims = jwtUtil.validateToken(token);
+            Integer userId = Integer.valueOf(claims.getSubject());
+
+            User user = userService.getUserById(userId);
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(user, userVO);
+
+            return ResponseResult.success(userVO);
+        } catch (Exception e) {
+            return ResponseResult.fail(ResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 }
