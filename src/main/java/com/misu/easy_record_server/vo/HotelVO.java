@@ -1,4 +1,5 @@
 package com.misu.easy_record_server.vo;
+
 import java.time.LocalDateTime;
 
 /**
@@ -10,6 +11,8 @@ public class HotelVO {
     private Integer starRating;
     private LocalDateTime createTime;
     private String managerName;
+    private String logo;
+    private String address;
 
     // 生成必要的Getter和Setter方法
     public Integer getHotelId() {
@@ -50,5 +53,21 @@ public class HotelVO {
 
     public void setManagerName(String managerName) {
         this.managerName = managerName;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

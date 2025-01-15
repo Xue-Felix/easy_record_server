@@ -5,10 +5,13 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author x
- * Hotel 实体
+ *         Hotel 实体
  */
 @Entity
 @Table(name = "tb_hotel")
@@ -42,6 +45,11 @@ public class Hotel implements Serializable {
     private String managerName;
 
     private String managerContact;
+
+    private String banner; // 酒店Banner图片URL，多个图片用逗号分隔
+
+    @Column(length = 200)
+    private String slogan; // 酒店口号愿景
 
     // 生成必要的Getter和Setter方法
     public Integer getHotelId() {
@@ -130,5 +138,21 @@ public class Hotel implements Serializable {
 
     public void setManagerContact(String managerContact) {
         this.managerContact = managerContact;
+    }
+
+    @Transient // 这个字段不会映射到数据库
+    public List<String> getBannerList() {
+        if (banner == null || banner.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return Arrays.asList(banner.split(","));
+    }
+
+    public String getSlogan() {
+        return slogan;
+    }
+
+    public void setSlogan(String slogan) {
+        this.slogan = slogan;
     }
 }
