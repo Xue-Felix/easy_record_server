@@ -45,6 +45,11 @@ public class HotelServiceImplementation implements HotelService {
     }
 
     @Override
+    public List<Hotel> getHotelsByUserId(Integer userId) {
+        return hotelMapper.findByUserId(userId);
+    }
+
+    @Override
     public Page<Hotel> findAllHotelsPageable(Pageable pageable) {
         return hotelMapper.findAll(pageable);
     }

@@ -1,6 +1,5 @@
 package com.misu.easy_record_server.service;
 
-
 import com.misu.easy_record_server.pojo.Hotel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,10 +11,16 @@ import java.util.List;
  */
 public interface HotelService {
     Hotel saveHotel(Hotel hotel);
+
     Hotel getHotelById(Integer id);
+
     List<Hotel> getAllHotels();
+
     Hotel updateHotel(Hotel hotel);
+
     void deleteHotel(Integer id);
+
+    List<Hotel> getHotelsByUserId(Integer userId);
 
     // 分页查询酒店
     Page<Hotel> findAllHotelsPageable(Pageable pageable);
