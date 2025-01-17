@@ -31,14 +31,4 @@ public class Room {
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
-
-    @PrePersist
-    protected void onCreate() {
-        createTime = updateTime = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updateTime = LocalDateTime.now();
-    }
 }
