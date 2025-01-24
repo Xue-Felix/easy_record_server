@@ -56,14 +56,14 @@ public class HotelController {
     }
 
     // 获取当前用户所属酒店信息的接口
-    @GetMapping("/my")
-    public ResponseResult<List<HotelVO>> getMyHotels(@RequestHeader("userId") Integer userId) {
-        List<Hotel> hotels = hotelService.getHotelsByUserId(userId);
-        if (hotels.isEmpty()) {
-            return ResponseResult.fail(ResponseStatus.NOT_FOUND, "未找到您所属的酒店");
-        }
-        return getListResponseResult(hotels);
-    }
+    // @GetMapping("/my")
+    // public ResponseResult<List<HotelVO>> getMyHotels(@RequestHeader("userId") Integer userId) {
+    //     List<Hotel> hotels = hotelService.getHotelsByUserId(userId);
+    //     if (hotels.isEmpty()) {
+    //         return ResponseResult.fail(ResponseStatus.NOT_FOUND, "未找到您所属的酒店");
+    //     }
+    //     return getListResponseResult(hotels);
+    // }
 
     // 根据酒店ID获取酒店信息的接口
     @GetMapping("/{id}")
@@ -79,7 +79,6 @@ public class HotelController {
     }
 
     // 获取所有酒店信息的接口
-    @GetMapping
     public ResponseResult<List<HotelVO>> getHotels() {
         var hotels = hotelService.getAllHotels();
         return getListResponseResult(hotels);

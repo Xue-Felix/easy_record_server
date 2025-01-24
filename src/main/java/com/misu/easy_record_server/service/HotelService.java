@@ -20,7 +20,7 @@ public interface HotelService {
 
     void deleteHotel(Integer id);
 
-    List<Hotel> getHotelsByUserId(Integer userId);
+    // List<Hotel> getHotelsByUserId(Integer userId);
 
     // 分页查询酒店
     Page<Hotel> findAllHotelsPageable(Pageable pageable);

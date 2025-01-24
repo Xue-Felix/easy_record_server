@@ -44,10 +44,10 @@ public class HotelServiceImplementation implements HotelService {
         hotelMapper.deleteById(id);
     }
 
-    @Override
-    public List<Hotel> getHotelsByUserId(Integer userId) {
-        return hotelMapper.findByUserId(userId);
-    }
+    // @Override
+    // public List<Hotel> getHotelsByUserId(Integer userId) {
+    //     return hotelMapper.findByUserId(userId);
+    // }
 
     @Override
     public Page<Hotel> findAllHotelsPageable(Pageable pageable) {
